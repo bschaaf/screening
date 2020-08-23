@@ -13,7 +13,7 @@ There is a Docker Compose file, `screening.yml`, in the root which runs three co
 In application.properties the following properties can be configured:
 
 - spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
-- #spring.datasource.url=jdbc:postgresql://pg-server:5432/postgres
+- #spring.datasource.url=jdbc:postgresql://pg-server:5432/postgres (use this setting for Docker Compose, link `pg-server`)
 - spring.datasource.username=postgres
 - spring.datasource.password=password
  
