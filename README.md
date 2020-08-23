@@ -17,8 +17,8 @@ In application.properties the following properties can be configured:
 - spring.datasource.username=postgres
 - spring.datasource.password=password
  
-rockstars.baseUrl=https://www.teamrockstars.nl/sites/default/files
-rockstars.songFile=songs.json
+- rockstars.baseUrl=https://www.teamrockstars.nl/sites/default/files
+- rockstars.songFile=songs.json
 
 
 
