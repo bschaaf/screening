@@ -24,7 +24,8 @@ rockstars.songFile=songs.json
 
 ## Execution ##
 
-The application can be run with `mvn spring-boot:run`. 
+Besides with Docker compose he application can be run with `mvn spring-boot:run` and also as standalone jar with `java -jar app.jar`.
+ 
 
 For any clarification: benoit.schaaf@yahoo.com, +31625051061.
 
