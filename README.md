@@ -12,10 +12,10 @@ There is a Docker Compose file, screening.yml, in the root which runs three cont
 
 In application.properties the following properties can be configured:
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
-#spring.datasource.url=jdbc:postgresql://pg-server:5432/postgres
-spring.datasource.username=postgres
-spring.datasource.password=password
+- spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+- #spring.datasource.url=jdbc:postgresql://pg-server:5432/postgres
+- spring.datasource.username=postgres
+- spring.datasource.password=password
  
 rockstars.baseUrl=https://www.teamrockstars.nl/sites/default/files
 rockstars.songFile=songs.json
