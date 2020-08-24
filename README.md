@@ -37,6 +37,7 @@ Further steps in the implementation could be:
 
 
 
+## Contact ##
 
 For any clarification: benoit.schaaf@yahoo.com, +31625051061.
 
