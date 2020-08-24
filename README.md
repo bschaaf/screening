@@ -25,7 +25,16 @@ In application.properties the following properties can be configured:
 ## Execution ##
 
 Besides with Docker Compose the application can be run with `mvn spring-boot:run` and also as standalone jar with `java -jar app.jar`.
- 
+
+
+
+## Further steps ##
+
+Further steps in the implementation could be:
+- write more tests, especially integration tests
+- enable Spring Security
+- compile with GraalVM
+
 
 For any clarification: benoit.schaaf@yahoo.com, +31625051061.
 
