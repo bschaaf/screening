@@ -33,7 +33,7 @@ public class MusicApplication {
 
 	/**
 	 * In the init method the songs are read and stored in the database. The artists are deduced from the songs.
-	 * A demo user with envrypted password is created as well. See application.properties for the relevant 
+	 * A demo user with encrypted password is created as well. See application.properties for the relevant 
 	 * parameters.
 	 */
 	@Profile("!test")

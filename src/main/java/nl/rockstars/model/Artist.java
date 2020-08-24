@@ -27,39 +27,4 @@ public class Artist {
     private Integer artistId;
     private String name;
     private String genre;
-
-    /*private Artist(ArtistBuilder builder){
-        this.artistId = builder.artistId;
-        this.name = builder.name;
-        this.genre = builder.genre;
-    }
-
-    public static ArtistBuilder builder() {
-        return new ArtistBuilder();
-    }
-
-    public static class ArtistBuilder {
-        private Integer artistId;
-        private String name;
-        private String genre;
-
-        public ArtistBuilder withArtistId(Integer artistId) {
-            this.artistId = artistId;
-            return this;
-        }
-
-        public ArtistBuilder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public ArtistBuilder withGenre(String genre) {
-            this.genre = genre;
-            return this;
-        }
-
-        public Artist build() {
-            return new Artist(this);
-        }
-    }*/
 }
