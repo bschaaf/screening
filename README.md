@@ -32,6 +32,7 @@ Besides with Docker Compose the application can be run with `mvn spring-boot:run
 
 Further steps in the implementation could be:
 - write more tests, especially integration tests
+- input validation
 - enable Spring Security
 - compile with GraalVM
 
