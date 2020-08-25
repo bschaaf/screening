@@ -2,6 +2,7 @@ package nl.rockstars.controller;
 
 import static nl.rockstars.utils.TokenGenerator.generateNewToken;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,7 +44,7 @@ import nl.rockstars.service.MusicService;
 @RequestMapping("api/music/v1")
 public class MusicRestController {
     private final MusicService musicService;
-    protected static Set<String> tokens = new HashSet<>();
+    protected static Set<String> tokens = Collections.synchronizedSet(new HashSet<>());
 
     protected void authenticate(String key) {
         if (!tokens.contains(key))
