@@ -92,8 +92,8 @@ public class MusicServiceUpdateTest {
         var artist = Artist.builder().name("artist2").build();
         when(artistRepository.findOptionalByName(anyString())).thenReturn(Optional.of(artist));
         // Then a song with the updated artist is returned
-        musicService.transferArtist(songDTO, song);
-        assertEquals("artist2", song.getArtist().getName());
+        var updatedSong = musicService.transferSong(songDTO, song);
+        assertEquals("artist2", updatedSong.getArtist().getName());
     }
 
     @Test
@@ -104,8 +104,8 @@ public class MusicServiceUpdateTest {
         // When the song dto contains new artist
         songDTO.setArtist("artist1");
         // Then the song is not modified and no mock is needed
-        musicService.transferArtist(songDTO, song);
-        assertEquals("artist1", song.getArtist().getName());
+        var updatedSong = musicService.transferSong(songDTO, song);
+        assertEquals("artist1", updatedSong.getArtist().getName());
     }
 
     @Test

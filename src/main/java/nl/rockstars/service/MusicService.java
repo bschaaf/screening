@@ -8,8 +8,11 @@ import static nl.rockstars.config.GlobalStringResources.LOGIN_STATUS_SUCCESFUL;
 import static nl.rockstars.config.GlobalStringResources.USER_NOT_FOUND;
 import static nl.rockstars.config.GlobalStringResources.USER_NOT_VALIDATED;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -30,6 +33,7 @@ import nl.rockstars.controller.mapping.MessageResponse;
 import nl.rockstars.model.Artist;
 import nl.rockstars.model.ArtistRepository;
 import nl.rockstars.model.Song;
+import nl.rockstars.model.Song.SongBuilder;
 import nl.rockstars.model.SongRepository;
 import nl.rockstars.model.UserRepository;
 import nl.rockstars.model.dto.ArtistDTO;
@@ -88,8 +92,13 @@ public class MusicService {
   }
 
   @Cacheable("songs")
-  public List<Song> getSongsByArtist(Integer id) {
+  public List<Song> getSongsByArtist1(Integer id) {
     return songRepository.findAllByArtist(id);
+  }
+
+  @Cacheable("songs")
+  public List<Song> getSongsByArtist(Integer id) {
+    return new ArrayList<>(artistRepository.findById(id).get().getSongs());
   }
 
   @Cacheable("artists")
@@ -100,48 +109,45 @@ public class MusicService {
   @CachePut("song")
   public Song updateSong(Integer id, SongDTO songDTO) {
     var song = songRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND + id));
-    transferSong(songDTO, song);
-    transferArtist(songDTO, song);
-    return songRepository.save(song);
-  }
-
-  // When a new artist is present in songDTO update artist. */
-  protected void transferArtist(SongDTO songDTO, Song song) {
-      if (StringUtils.hasLength(songDTO.getArtist()) && !song.getArtist().getName().equals(songDTO.getArtist()))
-        song.setArtist(insertArtist(songDTO.getArtist()));
+    return songRepository.save(transferSong(songDTO, song));
   }
 
   // Updates song fields except artist
-  protected void transferSong(SongDTO songDTO, Song song) {
-    transferStringIfPresent(songDTO.getName(), song::setName);
-    transferStringIfPresent(songDTO.getShortName(), song::setShortName);
-    transferStringIfPresent(songDTO.getSpotifyId(), song::setSpotifyId);
-    transferStringIfPresent(songDTO.getAlbum(), song::setAlbum);
-    transferIntegerIfPresent(songDTO.getYear(), song::setYear);
-    transferIntegerIfPresent(songDTO.getBpm(), song::setBpm);
-    transferIntegerIfPresent(songDTO.getDuration(), song::setDuration);
+  protected Song transferSong(SongDTO songDTO, Song song) {
+    var builder = song.toBuilder();
+    if (StringUtils.hasLength(songDTO.getArtist()) && !song.getArtist().getName().equals(songDTO.getArtist()))
+      builder.artist(insertArtist(songDTO.getArtist()));
+    if (StringUtils.hasLength(songDTO.getName()))
+      builder.name(songDTO.getName());
+    if (StringUtils.hasLength(songDTO.getShortName()))
+      builder.shortName(songDTO.getShortName());
+    if (StringUtils.hasLength(songDTO.getSpotifyId()))
+      builder.spotifyId(songDTO.getSpotifyId());
+    if (StringUtils.hasLength(songDTO.getAlbum()))
+      builder.album(songDTO.getAlbum());
+    if (songDTO.getYear() != null)
+      builder.year(songDTO.getYear());
+    if (songDTO.getBpm() != null)
+      builder.bpm(songDTO.getBpm());
+    if (songDTO.getDuration() != null)
+      builder.duration(songDTO.getDuration());
+    return builder.build();
   }
 
-  protected void transferStringIfPresent(String field, Consumer<String> transfer) {
-    if (StringUtils.hasLength(field))
-      transfer.accept(field);
+  protected Artist transferArtist(ArtistDTO artistDTO, Artist artist) {
+    var builder = artist.toBuilder();
+    if (StringUtils.hasLength(artistDTO.getName()))
+      builder.name(artistDTO.getName());
+    if (StringUtils.hasLength(artistDTO.getGenre()))
+      builder.genre(artistDTO.getGenre());
+    return builder.build();
   }
 
-  protected void transferIntegerIfPresent(Integer field, Consumer<Integer> transfer) {
-    if (field != null)
-      transfer.accept(field);
-  }
-
-  protected void transferArtist(ArtistDTO artistDTO, Artist artist) {
-    transferStringIfPresent(artistDTO.getName(), artist::setName);
-    transferStringIfPresent(artistDTO.getGenre(), artist::setGenre);
-  }
 
   @CachePut("artist")
   public Artist updateArtist(Integer id, ArtistDTO artistDTO) {
     var artist = artistRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ENTITY_NOT_FOUND + id));
-    transferArtist(artistDTO, artist);
-    return artistRepository.save(artist);
+    return artistRepository.save(transferArtist(artistDTO, artist));
   }
 
   public Artist insertArtist(String artistName, String genre) {
@@ -157,9 +163,9 @@ public class MusicService {
   @CacheEvict(cacheNames = "songs", allEntries = true)
   public Song createSong(SongDTO song) {
     var artist = insertArtist(song.getArtist(), song.getGenre());
-    return songRepository.save(Song.builder().name(song.getName()).year(song.getYear())
-        .shortName(song.getShortName()).bpm(song.getBpm()).duration(song.getDuration())
-        .spotifyId(song.getSpotifyId()).album(song.getAlbum()).artist(artist).build());
+    return songRepository
+        .save(Song.builder().name(song.getName()).year(song.getYear()).shortName(song.getShortName()).bpm(song.getBpm())
+            .duration(song.getDuration()).spotifyId(song.getSpotifyId()).album(song.getAlbum()).artist(artist).build());
   }
 
   @CacheEvict(cacheNames = "artists", allEntries = true)
